@@ -2,16 +2,18 @@ function add (a, b) {
   return a + b;
 }
 
-function memoize (fn) {
+function memoize (fn, { commutative = false } = {}) {
   let memory = new Map();
 
-  return (a, b) => {
-    if (memory.has(`${a}_${b}_key`)) {
-      return memory.get(`${a}_${b}_key`);
+  return (...args) => {
+    const keyArgs = commutative ? [...args].sort() : args;
+    const key = JSON.stringify(keyArgs);
+    if (memory.has(key)) {
+      return memory.get(key);
     } else {
-      const c = fn(a, b);
-      memory.set(`${a}_${b}_key`, c);
-      return c;
+      const result = fn(...args);
+      memory.set(key, result);
+      return result;
     }
   };
 }
