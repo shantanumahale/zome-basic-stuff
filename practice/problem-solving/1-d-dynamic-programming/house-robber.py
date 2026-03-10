@@ -44,3 +44,15 @@ class Solution:
 
         return dp[-1]
     
+    # 4
+    # Dynamic Programming: Space Optimized
+    # Time Complexity: O(n)
+    # Space Complexity: O(1)
+    def robber (self, nums: List[int]):
+        rob1, rob2 = 0, 0
+        for num in nums:
+            temp = max(num + rob1, rob2)
+            rob1 = rob2
+            rob2 = temp
+        return rob2
+    
