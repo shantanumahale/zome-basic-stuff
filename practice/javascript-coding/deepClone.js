@@ -18,12 +18,13 @@ function deepClone (object, seen = new WeakMap()) {
     const clone = new Set();
     seen.set(object, clone);
     object.forEach(value => clone.add(deepClone(value, seen)));
+    return clone;
   }
 
-  const clone = new object.constructor();
+  const clone = {};
   seen.set(object, clone);
 
-  Reflect.ownKeys(object).forEach((key) => {
+  Object.keys(object).forEach((key) => {
     clone[key] = deepClone(object[key], seen);
   });
   return clone;

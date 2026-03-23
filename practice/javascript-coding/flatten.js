@@ -12,6 +12,7 @@ function flatten (object, prefix = "", res = {}) {
       const arrKey = prefix ? `${prefix}[${index}]` : `${index}`;
       flatten(value, arrKey, res);
     });
+    return res;
   } else {
     const keys = Object.keys(object);
     if (keys.length === 0) {
@@ -22,5 +23,6 @@ function flatten (object, prefix = "", res = {}) {
       const newKey = prefix ? `${prefix}.${key}` : key;
       flatten(object[key], newKey, res); 
     })
+    return res;
   }
 }
