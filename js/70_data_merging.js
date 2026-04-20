@@ -6,7 +6,7 @@ function mergeData (sessions) {
             result.push({
                 user: session.user,
                 duration: session.duration,
-                equipment: [...session.equipment]
+                equipment: [...session.equipment].sort()
             });
         } else {
             result = result.map((item) => item.user === session.user ? {
@@ -15,7 +15,7 @@ function mergeData (sessions) {
                 equipment: [
                     ...[...item.equipment].filter(item => !session.equipment.includes(item)),
                     ...session.equipment
-                ]
+                ].sort()
             } : item);
         }
     });
