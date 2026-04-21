@@ -15,6 +15,7 @@ class EventEmitter {
         const index = listeners.findIndex((lstnr) => lstnr === listener);
         if (index < 0) return this;
         this.events[eventName].splice(index, 1);
+        return this;
     }
     emit (eventName, ...args) {
         if (!Object.hasOwn(this.events, eventName) || this.events[eventName].length === 0) return false;
