@@ -1,28 +1,41 @@
-function createResumableInterval (callback, delay, ...args) {
-    let interval = null;
-    let running = false;
+export default function createResumableInterval (callback, delay, ...args) {
+  let running = false;
+  let timeout = null;
+  let remaining = delay;
+  let lastStartTime = null;
 
-    const run = () => callback(...args);
-
-    return {
-        start: function () {
-            if (running) return;
-            running = true;
-            run();
-            interval = setInterval(run, delay);
-        },
-        pause: function () {
-            if (!running) return;
-            clearInterval(interval);
-            running = false;
-            interval = null;
-        },
-        stop: function () {
-            clearInterval(interval);
-            running = false;
-            interval = null;
-        }
+  const run = () => {
+    callback(...args);
+    if (running) {
+      remaining = delay;
+      lastStartTime = Date.now();
+      timeout = setTimeout(run, delay);
     }
+  }
+
+  return {
+    start: function () {
+      if (running) return;
+      runinng = true;
+      timeout = setTimeout(() => {
+        run();
+      }, remaining);
+    },
+    pause: function () {
+      if (!running) return;
+      clearTimeout(timeout);
+      const elapsed = (Date.now() - lastStartTime);
+      remaining = Math.max(0, remaining - elapsed);
+      running = false;
+      timeout = null;
+    },
+    stop: function () {
+      clearTimeout(timeout);
+      running = false;
+      timeout = null;
+      remaining = delay;
+    }
+  }
 }
 
 let i = 0;
